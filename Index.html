@@ -1,217 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mini Browser</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        background: #111;
-        font-family: Arial, sans-serif;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .device {
-        width: 900px;
-        max-width: 95%;
-        height: 600px;
-        background: #222;
-        border: 10px solid #333;
-        border-radius: 25px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .top {
-        background: #333;
-        padding: 12px;
-        display: flex;
-        gap: 8px;
-    }
-
-    .address {
-        flex: 1;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        outline: none;
-    }
-
-    button {
-        border: none;
-        border-radius: 8px;
-        padding: 0 16px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #ddd;
-    }
-
-    .screen {
-        flex: 1;
-        background: white;
-        position: relative;
-    }
-
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    .welcome {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        color: #333;
-        text-align: center;
-    }
-
-    .welcome h1 {
-        font-size: 40px;
-        margin-bottom: 10px;
-    }
-
-    .bottom {
-        height: 45px;
-        background: #333;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Search Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .search-container {
+            text-align: center;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="device">
-
-    <div class="top">
-        <button onclick="goBack()">←</button>
-        <button onclick="goForward()">→</button>
-
-        <input
-            id="address"
-            class="address"
-            type="text"
-            placeholder="Search or enter a website..."
-            onkeydown="handleEnter(event)"
-        >
-
-        <button onclick="go()">Go</button>
+    <div class="search-container">
+        <h2>Web Search</h2>
+        <form action="https://www.google.com/search" method="get" target="_blank">
+            <input type="text" name="q" placeholder="Search anything..." required>
+            <button type="submit">Search</button>
+        </form>
     </div>
-
-    <div class="screen">
-
-        <div id="welcome" class="welcome">
-            <h1>Mini Browser</h1>
-            <p>Type a search or website above.</p>
-        </div>
-
-        <iframe
-            id="browser"
-            style="display:none;"
-            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-        ></iframe>
-
-    </div>
-
-    <div class="bottom">
-        Mini Browser
-    </div>
-
-</div>
-
-<script>
-
-const browser = document.getElementById("browser");
-const address = document.getElementById("address");
-const welcome = document.getElementById("welcome");
-
-function go() {
-
-    let input = address.value.trim();
-
-    if (!input) return;
-
-    let url;
-
-    // If it looks like a website
-    if (
-        input.startsWith("http://") ||
-        input.startsWith("https://")
-    ) {
-        url = input;
-    }
-
-    else if (
-        input.includes(".") &&
-        !input.includes(" ")
-    ) {
-        url = "https://" + input;
-    }
-
-    // Otherwise search the web
-    else {
-        url =
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(input);
-    }
-
-    welcome.style.display = "none";
-    browser.style.display = "block";
-
-    browser.src = url;
-}
-
-function handleEnter(event) {
-
-    if (event.key === "Enter") {
-        go();
-    }
-
-}
-
-function goBack() {
-
-    try {
-        browser.contentWindow.history.back();
-    } catch (e) {
-        console.log("Back unavailable");
-    }
-
-}
-
-function goForward() {
-
-    try {
-        browser.contentWindow.history.forward();
-    } catch (e) {
-        console.log("Forward unavailable");
-    }
-
-}
-
-</script>
-
 </body>
 </html>
