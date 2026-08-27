@@ -1,15 +1,53 @@
-<script>
-    const PROXY_URL = "https://my-proxy-backend.onrender.com/proxy?url=";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartstudy Browser</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; background: #181825; }
+        .bar { display: flex; padding: 10px; background: #11111b; gap: 10px; }
+        input { flex: 1; padding: 10px; font-size: 15px; border-radius: 5px; border: 1px solid #45475a; background: #313244; color: #fff; }
+        button { padding: 10px 20px; font-size: 15px; font-weight: bold; background: #89b4fa; border: none; border-radius: 5px; cursor: pointer; color: #11111b; }
+        button:hover { background: #74c7ec; }
+        iframe { flex: 1; border: none; width: 100%; background: #fff; }
+    </style>
+</head>
+<body>
 
-    function handleSearch() {
-        const input = document.getElementById('urlInput').value.trim();
-        if (!input) return;
+    <div class="bar">
+        <input type="text" id="targetInput" placeholder="Enter URL (https://...) or search term...">
+        <button onclick="loadPage()">Go</button>
+    </div>
 
-        let target = input;
-        if (!input.startsWith('http')) {
-            target = 'https://www.bing.com/search?q=' + encodeURIComponent(input);
+    <iframe id="viewFrame" src="about:blank"></iframe>
+
+    <script>
+        // Paste your Render Web Service URL here (keep /proxy?url= at the end)
+        const PROXY_SERVER = "https://my-proxy-server-xyz.onrender.com/proxy?url=";
+
+        function loadPage() {
+            const input = document.getElementById('targetInput').value.trim();
+            if (!input) return;
+
+            let finalUrl = input;
+            if (input.startsWith('http://') || input.startsWith('https://')) {
+                finalUrl = input;
+            } else if (input.includes('.') && !input.includes(' ')) {
+                finalUrl = 'https://' + input;
+            } else {
+                finalUrl = 'https://www.bing.com/search?q=' + encodeURIComponent(input);
+            }
+
+            // Fetch the page using your Render proxy backend
+            document.getElementById('viewFrame').src = PROXY_SERVER + encodeURIComponent(finalUrl);
         }
 
-        document.getElementById('browserFrame').src = PROXY_URL + encodeURIComponent(target);
-    }
-</script>
+        document.getElementById('targetInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loadPage();
+        });
+    </script>
+
+</body>
+</html>
